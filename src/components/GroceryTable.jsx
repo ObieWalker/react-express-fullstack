@@ -1,10 +1,9 @@
 import React from 'react';
-import GroceryItems from './GroceryItems';
 
 const GroceryTable = ({groceries, deleteGrocery, buyGrocery, onShow}) => {
     return (
       <div>
-        <table className="table text-center table-hover mx-auto bg-white table-responsive-sm table-striped" style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
+        <table className="table text-center table-hover mx-auto bg-white table-responsive-sm table-striped" style={{ marginLeft: '25%', marginRight: '10%', width: '50%' }}>
           <thead className="text-center text-white bg-info border border-white">
             <tr className="p-3">
               <th scope="col" className="border border-white">
@@ -56,6 +55,7 @@ const GroceryTable = ({groceries, deleteGrocery, buyGrocery, onShow}) => {
           )}
           </tbody>
         </table>
+
       </div>
     );
   }
