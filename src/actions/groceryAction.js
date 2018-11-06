@@ -1,5 +1,4 @@
 import * as types from './actionTypes';
-// import authorApi from '../api/mockAuthorApi';
 import axios from 'axios';
 import toastr from 'toastr';
 
@@ -32,60 +31,80 @@ export const buyGrocerySuccess = (groceryId) => {
   }
 }
 
+export const editGrocerySuccess = (groceryId, grocery) => {
+  return {
+    type: types.EDIT_GROCERY_SUCCESS,
+    groceryId,
+    grocery
+  }
+}
 
 export const loadGroceries = () => (dispatch) => {
-  console.log("loading groceries...")
     return axios({
       method: 'GET',
       url: '/api/v1/items'
     })
     .then(response => {
-      console.log("got groceries", response.data)
       dispatch(getGroceriesSuccess(response.data))
     })
     .catch((error) => { throw error; });
 }
 
 export const addGrocery = (grocery) => (dispatch) =>  {
-  console.log("Adding Grocery....")
-    // .then(grocery => {
-    //   dispatch(addGrocerySuccess(grocery))
-    // })
-    // .catch((error) => { throw error; });
     return axios({
       method: 'POST',
-      url: '/api/v1/items'
+      url: '/api/v1/items',
+      data: grocery
     })
     .then(response => {
-      console.log("add groceries return", response.data)
-      // toastr.success()
-      // dispatch(addGrocerySuccess(grocery))
+      toastr.success(response.data.message)
+      dispatch(addGrocerySuccess(response.data.grocery))
     })
-    .catch((error) => { throw error; });
+    .catch((error) => { 
+      toastr.error(error)
+    });
 }
 
-export const deleteGrocery = (groceryId) =>  {
-  console.log("Adding Grocery with ID", groceryId)
-  return dispatch => {
-    // authorApi.deleteAuthor(groceryId)
-    // .then(() => {
-    //   dispatch(deleteGrocerySuccess(groceryId))
-    // })
-    // .catch((error) => {
-    //   toastr.error(error)
-    //   throw error; });
-  }
+export const deleteGrocery = (groceryId) => dispatch =>  {
+  return axios({
+    method: 'DELETE',
+    url: `/api/v1/items/${groceryId}`
+  })
+  .then(response => {
+    toastr.success(response.data.message)
+    dispatch(deleteGrocerySuccess(groceryId))
+  })
+  .catch((error) => { 
+    toastr.error(error)
+  });
 }
 
-export const buyGrocery = (groceryId) =>  {
-  console.log("Buying Grocery with ID", groceryId)
-  return dispatch => {
-    // authorApi.deleteAuthor(groceryId)
-    // .then(() => {
-    //   dispatch(deleteGrocerySuccess(groceryId))
-    // })
-    // .catch((error) => {
-    //   toastr.error(error)
-    //   throw error; });
-  }
+export const buyGrocery = (groceryId) => dispatch =>  {
+  return axios({
+    method: 'PUT',
+    url: `/api/v1/items/${groceryId}`
+  })
+  .then(response => {
+    toastr.success(response.data.message)
+    dispatch(buyGrocerySuccess(groceryId))
+  })
+  .catch((error) => { 
+    toastr.error(error)
+  });
+}
+
+
+export const editGrocery = (groceryId,  grocery) => dispatch =>  {
+  return axios({
+    method: 'PATCH',
+    url: `/api/v1/items/${groceryId}`,
+    data: grocery
+  })
+  .then(response => {
+    toastr.success(response.data.message)
+    dispatch(editGrocerySuccess(groceryId, response.data.item))
+  })
+  .catch((error) => { 
+    toastr.error(error)
+  });
 }

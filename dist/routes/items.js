@@ -40,33 +40,33 @@ router.get('/items/:id', function (req, res) {
   });
 });
 router.post('/items', function (req, res) {
-  console.log("Adding Item....", req.body);
-  var item = req.body;
-
-  _groceryItem.default.create(item).then(function (grocery) {
-    if (grocery.length > 0) {
+  _groceryItem.default.create({
+    name: req.body.groceryName,
+    price: req.body.groceryPrice
+  }).then(function (grocery) {
+    if (grocery) {
       res.json({
         success: true,
-        message: "Grocery has been added",
+        message: "".concat(grocery.name, " has been added at &#8358;").concat(grocery.price),
         grocery: grocery
-      });
-    } else {
-      res.json({
-        success: false,
-        message: "Grocery not added"
       });
     }
   }).catch(function (err) {
     console.log(err);
+    res.json({
+      success: false,
+      message: "Grocery cannot be added because ".concat(err),
+      err: err
+    });
   });
 });
 router.delete('/items/:id', function (req, res) {
   var id = req.params.id;
 
-  _groceryItem.default.findOneAndRemove(id).then(function () {
+  _groceryItem.default.findByIdAndDelete(id).then(function (deletedItem) {
     res.json({
       success: true,
-      message: "The item has been deleted"
+      message: " The item ".concat(deletedItem.name, " has been deleted")
     });
   }).catch(function (err) {
     res.json({
@@ -77,7 +77,10 @@ router.delete('/items/:id', function (req, res) {
 });
 router.patch('/items/:id', function (req, res) {
   var itemId = req.params.id;
-  var newItem = req.body;
+  var newItem = {
+    name: req.body.groceryName,
+    price: req.body.groceryPrice
+  };
 
   _groceryItem.default.findByIdAndUpdate(itemId, newItem, {
     new: true

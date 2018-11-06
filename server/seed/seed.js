@@ -13,31 +13,29 @@ mongoose.connection.db.dropDatabase();
   const groceryItems = [
     new GroceryItem({
       name: "Oranges",
-      price: (Math.floor(Math.random() * 100)/100) + 100
+      price: (Math.floor(Math.random() * 10000))/100
     }),
     new GroceryItem({
       name: "Apples",
-      purchased: true,
-      price: (Math.floor(Math.random() * 100)/100) + 100
+      price: (Math.floor(Math.random() * 10000))/100
     }),
     new GroceryItem({
       name: "Bananas",
-      price: (Math.floor(Math.random() * 100)/100) + 100
+      price: (Math.floor(Math.random() * 10000))/100
     }),
     new GroceryItem({
       name: "Guava",
-      price: (Math.floor(Math.random() * 100)/100) + 100
+      price: (Math.floor(Math.random() * 10000))/100
     }),
     new GroceryItem({
       name: "Pineapple",
-      price: (Math.floor(Math.random() * 100)/100) + 100
+      price: (Math.floor(Math.random() * 10000))/100
     }),
   ]
 
   let done = 0
 
   groceryItems.forEach((item) =>{
-  console.log(item)
     item.save()
     .then(savedItem => {
       done++

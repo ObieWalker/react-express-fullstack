@@ -37,10 +37,10 @@ app.use('/api/v1/', _items.default); // app.use((req, res, next) => console.log(
 // app.use(app.router);
 // router.initialize(app);
 // app.use('/', express.static('dist'));
-
-app.use('*', function (req, res) {
-  console.log("Use an arrow function na!!");
-}); // express.static('dist'));
+// app.use('*', (req, res) => {
+//   console.log("Use an arrow function na!!")
+// })
+// express.static('dist'));
 
 app.listen(port, function (err) {
   if (err) {

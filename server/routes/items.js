@@ -35,36 +35,36 @@ const router = express.Router();
   })
 
   router.post('/items',(req, res) => {
-    console.log("Adding Item....", req.body)
-    const item = req.body;
-    GroceryItem.create(item)
+    GroceryItem.create({
+      name: req.body.groceryName,
+      price: req.body.groceryPrice
+    })
     .then(grocery => {
-      if (grocery.length > 0) {
+      if (grocery) {
         res.json({
           success: true,
-          message: "Grocery has been added",
+          message: `${grocery.name} has been added at &#8358;${grocery.price}`,
           grocery
-        })
-      } else {
-        res.json({
-          success: false,
-          message: "Grocery not added"
         })
       }
     })
     .catch(err => {
       console.log(err)
+      res.json({
+        success: false,
+        message: `Grocery cannot be added because ${err}`,
+        err
+      })
     })
   })
 
   router.delete('/items/:id',(req, res) => {
     const id = req.params.id
-
-    GroceryItem.findOneAndRemove(id)
-    .then(() => {
+    GroceryItem.findByIdAndDelete(id)
+    .then((deletedItem) => {
       res.json({
         success: true,
-        message: "The item has been deleted"
+        message: ` The item ${deletedItem.name} has been deleted`
       })
     })
     .catch(err => {
@@ -77,7 +77,10 @@ const router = express.Router();
 
   router.patch('/items/:id',(req, res) => {
     const itemId = req.params.id
-    const newItem = req.body
+    const newItem = {
+      name: req.body.groceryName,
+      price: req.body.groceryPrice
+    }
     GroceryItem.findByIdAndUpdate(itemId, newItem, {new:true})
     .then(item => {
       res.json({
