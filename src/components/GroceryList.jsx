@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { addGrocery, deleteGrocery, buyGrocery, editGrocery } from '../actions/groceryAction'
 import GroceryModal from './GroceryModal';
+import TotalPrice from './TotalPrice';
 
 import GroceryTable from './GroceryTable'
 
@@ -114,6 +115,11 @@ onBuy(id) {
     return (
       <div>
         <h1>Grocery Listing  </h1>
+        <div className="p-3 mb-2 bg-info text-white" style={{ float: 'right', padding: '2%' }}>
+          <h4>
+            <TotalPrice groceries={this.props.groceries}/>
+          </h4>
+        </div>
         <GroceryTable 
           groceries={this.props.groceries}
           addGrocery={this.addGrocery}
@@ -135,7 +141,9 @@ onBuy(id) {
         />
 
         <button className="btn btn-lg btn-primary"
-          onClick={() => this.setState({ show: true })} >Add Grocery</button>
+          onClick={() => this.setState({ show: true })} >
+          Add Grocery
+        </button>
       </div>
     );
   }
