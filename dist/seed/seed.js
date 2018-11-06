@@ -12,24 +12,22 @@ mongoose.connection.on('connected', function () {
   mongoose.connection.db.dropDatabase();
   var groceryItems = [new GroceryItem({
     name: "Oranges",
-    price: Math.floor(Math.random() * 100) / 100 + 100
+    price: Math.floor(Math.random() * 10000) / 100
   }), new GroceryItem({
     name: "Apples",
-    purchased: true,
-    price: Math.floor(Math.random() * 100) / 100 + 100
+    price: Math.floor(Math.random() * 10000) / 100
   }), new GroceryItem({
     name: "Bananas",
-    price: Math.floor(Math.random() * 100) / 100 + 100
+    price: Math.floor(Math.random() * 10000) / 100
   }), new GroceryItem({
     name: "Guava",
-    price: Math.floor(Math.random() * 100) / 100 + 100
+    price: Math.floor(Math.random() * 10000) / 100
   }), new GroceryItem({
     name: "Pineapple",
-    price: Math.floor(Math.random() * 100) / 100 + 100
+    price: Math.floor(Math.random() * 10000) / 100
   })];
   var done = 0;
   groceryItems.forEach(function (item) {
-    console.log(item);
     item.save().then(function (savedItem) {
       done++;
 

@@ -1,6 +1,8 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState'
 
+let newState, itemIndex, purchasedGrocery;
+
 export default function groceriesReducer(state = initialState.groceries, action) {
   switch (action.type) {
     case types.GET_GROCERIES_SUCCESS:
@@ -13,22 +15,30 @@ export default function groceriesReducer(state = initialState.groceries, action)
 
     case types.DELETE_GROCERY_SUCCESS:
       return [
-        ...state.filter(grocery => grocery.id !== action.groceryId)
+        ...state.filter(grocery => grocery._id !== action.groceryId)
       ];
 
     case types.BUY_GROCERY_SUCCESS:
-      let newState = Object.assign({}, state);
-      let itemIndex = newState.groceries.findIndex(grocery => grocery.id === action.groceryId);
-      let purchasedGrocery = newState.groceries[itemIndex];
+      newState =  state;      
+      itemIndex = newState.findIndex(grocery => grocery._id === action.groceryId);
+      purchasedGrocery = newState[itemIndex];
       purchasedGrocery.purchased = true;
-      newState.groceries = [
-        ...newState.groceries.splice(0, itemIndex),
+      newState = [
+        ...newState.slice(0, itemIndex),
         purchasedGrocery,
-        ...newState.groceries.splice(
-          itemIndex + 1,
-          newState.groceries.length
-        )
-      ];
+        ...newState.slice(itemIndex + 1)
+      ]
+      return newState;
+
+      case types.EDIT_GROCERY_SUCCESS:
+        newState =  state;
+        itemIndex = newState.findIndex(grocery => grocery._id === action.groceryId);
+        purchasedGrocery = action.grocery;
+        newState = [
+          ...newState.slice(0, itemIndex),
+          purchasedGrocery,
+          ...newState.slice(itemIndex + 1)
+        ]
       return newState;
 
     default:
