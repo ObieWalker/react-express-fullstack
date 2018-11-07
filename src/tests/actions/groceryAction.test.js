@@ -21,45 +21,130 @@ describe('fetch groceries actions', () => {
       const request = moxios.requests.mostRecent();
       request.respondWith({
         status: 200,
-        response: {
-          groceries
-        }
+        response: groceries
       });
     });
     const expectedActions = [
       { type: types.GET_GROCERIES_SUCCESS, groceries }
     ];
-    const store = mockStore({groceries: {}} );
+    const store = mockStore({groceries: []});
     return store.dispatch(loadGroceries()).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
-  // it('handles FETCH_CENTERS_FAILURE after fetching centers', () => {
-  //   const error = 'No centers available';
-  //   moxios.wait(() => {
-  //     const request = moxios.requests.mostRecent();
-  //     request.respondWith({
-  //       status: 404,
-  //       response: {
-  //         message: 'No centers available'
-  //       }
-  //     });
-  //   });
-  //   const expectedActions = [
-  //     { type: types.IS_CENTERS_FETCHING, bool: true },
-  //     { type: types.FETCH_CENTERS_FAILURE, error },
-  //     { type: types.IS_CENTERS_FETCHING, bool: false }
-  //   ];
-  //   const store = mockStore({ centers: [] });
-  //   return store.dispatch(getCenters()).then(() => {
-  //     expect(store.getActions()).toEqual(expectedActions);
-  //   });
-  // });
-  // it('handles CLEAR_CENTER_STATE to remove all centers', () => {
-  //   const empty = [];
-  //   const expectedActions = [{ type: types.CLEAR_CENTER_STATE, empty }];
-  //   const store = mockStore({ centers: [] });
-  //   store.dispatch(clearCenterState());
-  //   expect(store.getActions()).toEqual(expectedActions);
-  // });
+});
+
+describe('add groceries actions', () => {
+  beforeEach(() => {
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('handles ADD_GROCERY_SUCCESS after adding grocery', () => {
+    const grocery = groceries[0]
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 201,
+        response: {
+          grocery
+        }
+      });
+    });
+    const expectedActions = [
+      { type: types.ADD_GROCERY_SUCCESS, grocery }
+    ];
+    const store = mockStore({grocery: {}});
+    return store.dispatch(addGrocery(grocery)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+});
+
+describe('delete groceries actions', () => {
+  beforeEach(() => {
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('handles DELETE_GROCERY_SUCCESS after deleting grocery', () => {
+    const groceryId = 3
+    const message = "Grocery has been deleted"
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          message
+        }
+      });
+    });
+    const expectedActions = [
+      { type: types.DELETE_GROCERY_SUCCESS, groceryId }
+    ];
+    const store = mockStore({grocery: {}});
+    return store.dispatch(deleteGrocery(groceryId)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+});
+
+describe('buy groceries actions', () => {
+  beforeEach(() => {
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('handles BUY_GROCERY_SUCCESS after buying grocery', () => {
+    const groceryId = 3
+    const message = "Grocery has been successfully purchased"
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          message
+        }
+      });
+    });
+    const expectedActions = [
+      { type: types.BUY_GROCERY_SUCCESS, groceryId }
+    ];
+    const store = mockStore({grocery: {}});
+    return store.dispatch(buyGrocery(groceryId)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+});
+
+describe('edit groceries actions', () => {
+  beforeEach(() => {
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+  it('handles EDIT_GROCERY_SUCCESS after buying grocery', () => {
+    const groceryId = 3
+    const message = "Grocery has been successfully modified"
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          message
+        }
+      });
+    });
+    const expectedActions = [
+      { type: types.EDIT_GROCERY_SUCCESS, groceryId }
+    ];
+    const store = mockStore({grocery: {}});
+    return store.dispatch(editGrocery(groceryId)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
 });

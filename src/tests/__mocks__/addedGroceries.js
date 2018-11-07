@@ -19,6 +19,11 @@ module.exports = [
   {
     name: "Pineapple",
     price: 4343
+  },
+  {
+    name: "Oranges",
+    price: 2322,
+    purchased: true
   }
 ]
 
