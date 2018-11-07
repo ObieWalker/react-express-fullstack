@@ -47,7 +47,7 @@ export const loadGroceries = () => (dispatch) => {
     .then(response => {
       dispatch(getGroceriesSuccess(response.data))
     })
-    .catch((error) => { throw error; });
+    .catch((error) => { console.log(error) });
 }
 
 export const addGrocery = (grocery) => (dispatch) =>  {

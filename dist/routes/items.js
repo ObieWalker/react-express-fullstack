@@ -14,8 +14,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var router = _express.default.Router();
 
 router.get('/items', function (req, res) {
-  return _groceryItem.default.find(function (error, data) {
-    return res.send(data);
+  _groceryItem.default.find({}, function (error, data) {
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: error
+      });
+    } else {
+      res.send(data);
+    }
+  }).catch(function (err) {
+    res.status(500).json({
+      success: false,
+      message: "error with input type"
+    });
   });
 });
 router.get('/items/:id', function (req, res) {
@@ -30,13 +42,16 @@ router.get('/items/:id', function (req, res) {
         item: item
       });
     } else {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "No such item"
       });
     }
   }).catch(function (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "error with input type"
+    });
   });
 });
 router.post('/items', function (req, res) {
@@ -45,14 +60,14 @@ router.post('/items', function (req, res) {
     price: req.body.groceryPrice
   }).then(function (grocery) {
     if (grocery) {
-      res.json({
+      console.log("grocery", grocery);
+      res.status(201).json({
         success: true,
         message: "".concat(grocery.name, " has been added at &#8358;").concat(grocery.price),
         grocery: grocery
       });
     }
   }).catch(function (err) {
-    console.log(err);
     res.json({
       success: false,
       message: "Grocery cannot be added because ".concat(err),
@@ -64,36 +79,54 @@ router.delete('/items/:id', function (req, res) {
   var id = req.params.id;
 
   _groceryItem.default.findByIdAndDelete(id).then(function (deletedItem) {
-    res.json({
-      success: true,
-      message: " The item ".concat(deletedItem.name, " has been deleted")
-    });
+    if (deletedItem) {
+      res.json({
+        success: true,
+        message: "The item has been deleted."
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "No such item"
+      });
+    }
   }).catch(function (err) {
-    res.json({
+    res.status(404).json({
       success: false,
-      message: err
+      message: "No such item"
     });
   });
 });
 router.patch('/items/:id', function (req, res) {
-  var itemId = req.params.id;
+  var itemId = {
+    _id: req.params.id
+  };
   var newItem = {
     name: req.body.groceryName,
     price: req.body.groceryPrice
   };
 
-  _groceryItem.default.findByIdAndUpdate(itemId, newItem, {
+  _groceryItem.default.findOneAndUpdate(itemId, {
+    $set: newItem
+  }, {
     new: true
   }).then(function (item) {
-    res.json({
-      success: true,
-      message: "The item has been updated",
-      item: item
-    });
+    if (item) {
+      res.json({
+        success: true,
+        message: "The item has been updated",
+        item: item
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "No such item"
+      });
+    }
   }).catch(function (err) {
-    res.json({
+    res.status(404).json({
       success: false,
-      message: err
+      message: "No such item"
     });
   });
 });
@@ -106,15 +139,22 @@ router.put('/items/:id', function (req, res) {
   _groceryItem.default.findByIdAndUpdate(itemId, itemPurchased, {
     new: true
   }).then(function (item) {
-    res.json({
-      success: true,
-      message: "The item has been purchased",
-      item: item
-    });
+    if (item) {
+      res.json({
+        success: true,
+        message: "The item has been purchased",
+        item: item
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "No such item"
+      });
+    }
   }).catch(function (err) {
-    res.json({
+    res.status(404).json({
       success: false,
-      message: err
+      message: "No such item"
     });
   });
 });
