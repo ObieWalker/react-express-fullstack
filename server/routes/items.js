@@ -4,11 +4,25 @@ import GroceryItem from '../database/models/groceryItem.js';
 const router = express.Router();
 
 
-  router.get('/items',(req, res) => 
-    GroceryItem.find((error, data) => 
-      res.send(data)
-    )
-  )
+  router.get('/items',(req, res) => {
+    GroceryItem.find({}, (error, data) => {
+      if(error){
+        res.status(500).json({
+          success: false,
+          message: error
+        });
+      } else {
+        res.send(data)
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        success: false,
+        message: "error with input type"
+      });
+    })
+
+    }  )
 
   router.get('/items/:id',(req, res) => {
     const id = req.params.id
@@ -23,14 +37,17 @@ const router = express.Router();
           item
         })
       } else {
-        res.json({
+        res.status(404).json({
           success: false,
           message: "No such item"
-        })
+        });
       }
     })
     .catch(err => {
-      console.log(err)
+      res.status(500).json({
+        success: false,
+        message: "error with input type"
+      });
     })
   })
 
@@ -41,7 +58,8 @@ const router = express.Router();
     })
     .then(grocery => {
       if (grocery) {
-        res.json({
+        console.log("grocery", grocery)
+        res.status(201).json({
           success: true,
           message: `${grocery.name} has been added at &#8358;${grocery.price}`,
           grocery
@@ -49,7 +67,6 @@ const router = express.Router();
       }
     })
     .catch(err => {
-      console.log(err)
       res.json({
         success: false,
         message: `Grocery cannot be added because ${err}`,
@@ -62,38 +79,52 @@ const router = express.Router();
     const id = req.params.id
     GroceryItem.findByIdAndDelete(id)
     .then((deletedItem) => {
-      res.json({
-        success: true,
-        message: ` The item ${deletedItem.name} has been deleted`
-      })
+      if (deletedItem){
+        res.json({
+          success: true,
+          message: `The item has been deleted.`
+        })
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "No such item"
+        });
+      }
     })
     .catch(err => {
-      res.json({
+      res.status(404).json({
         success: false,
-        message: err
-      })
+        message: "No such item"
+      });
     })
   })
 
   router.patch('/items/:id',(req, res) => {
-    const itemId = req.params.id
+    const itemId = { _id : req.params.id }
     const newItem = {
       name: req.body.groceryName,
       price: req.body.groceryPrice
     }
-    GroceryItem.findByIdAndUpdate(itemId, newItem, {new:true})
+    GroceryItem.findOneAndUpdate(itemId, { $set: newItem }, {new:true})
     .then(item => {
-      res.json({
-        success: true,
-        message: "The item has been updated",
-        item
-      })
+      if(item){
+        res.json({
+          success: true,
+          message: "The item has been updated",
+          item
+        })
+      }  else {
+        res.status(404).json({
+          success: false,
+          message: "No such item"
+        });
+      }
     })
     .catch(err => {
-      res.json({
+      res.status(404).json({
         success: false,
-        message: err
-      })
+        message: "No such item"
+      });
     })
   })
 
@@ -104,17 +135,24 @@ const router = express.Router();
     }
     GroceryItem.findByIdAndUpdate(itemId, itemPurchased, {new:true})
     .then(item => {
-      res.json({
-        success: true,
-        message: "The item has been purchased",
-        item
-      })
+      if (item){
+        res.json({
+          success: true,
+          message: "The item has been purchased",
+          item
+        })
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "No such item"
+        });
+      }
     })
     .catch(err => {
-      res.json({
+      res.status(404).json({
         success: false,
-        message: err
-      })
+        message: "No such item"
+      });
     })
   })
 

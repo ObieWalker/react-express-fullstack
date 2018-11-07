@@ -1,7 +1,7 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState'
 
-let newState, itemIndex, purchasedGrocery;
+let newState, itemIndex, purchasedGrocery = { purchased: false};
 
 export default function groceriesReducer(state = initialState.groceries, action) {
   switch (action.type) {

@@ -7,7 +7,7 @@ import TotalPrice from './TotalPrice';
 
 import GroceryTable from './GroceryTable'
 
-class GroceryList extends Component {
+export class GroceryList extends Component {
   constructor(props) {
     super(props);
     this.state = {
