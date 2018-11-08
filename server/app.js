@@ -1,5 +1,6 @@
 import logger from 'morgan';
 import router from './routes/items.js';
+import dotenv from 'dotenv';
 const path = require('path');
 const bodyParser = require('body-parser');
 const open = require('open');
@@ -12,11 +13,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 
+dotenv.config();
 // app.use('/', express.static('dist'));
 // app.use('*', express.static('dist'));
 const env = process.env.NODE_ENV || 'development';
 
 if (env !== 'test') {
+
   require('./database/database.js')
 }
 
@@ -29,20 +32,21 @@ app.use('/api/v1/', router);
 // app.use(app.router);
 // router.initialize(app);
 
-// app.use('/', express.static('dist'));
-// app.use('*', (req, res) => {
-//   console.log("Use an arrow function na!!")
-// })
-// express.static('dist'));
+app.use('/', express.static('dist'));
+app.use('*', (req, res) => {
+  res.send({ express: 'No route' });
+  console.log("Use an arrow function na!!")
+})
 
 app.listen(port, function(err) {
   if (err) {
     console.log(err);
   } else {
     if (process.env.NODE_ENV === 'development') {
-      open(`http://localhost:${port}`);
+      open(`${process.env.hostURL}:${port}`);
     }
   }
 });
+
 
 export default app;

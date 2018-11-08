@@ -114,7 +114,7 @@ onBuy(id) {
     const  { errors } = this.state
     return (
       <div>
-        <h1>Grocery Listing  </h1>
+        <h1 className="text-center">Grocery Listing  </h1>
         <div className="p-3 mb-2 bg-info text-white" style={{ float: 'right', padding: '2%' }}>
           <h4>
             <TotalPrice groceries={this.props.groceries}/>
@@ -139,11 +139,12 @@ onBuy(id) {
           groceryPrice={this.state.groceryPrice}
           grocery={this.state.grocery}
         />
-
-        <button className="btn btn-lg btn-primary"
-          onClick={() => this.setState({ show: true })} >
-          Add Grocery
-        </button>
+        <div className="text-center">
+          <button className="btn btn-lg btn-primary "
+            onClick={() => this.setState({ show: true })} >
+            Add Grocery
+          </button>
+        </div>
       </div>
     );
   }

@@ -12,7 +12,11 @@ const router = express.Router();
           message: error
         });
       } else {
-        res.send(data)
+        res.json({
+          success: true,
+          data,
+          message: process.env.MONGODB_URI
+        })
       }
     })
     .catch(err => {
@@ -58,11 +62,11 @@ const router = express.Router();
     })
     .then(grocery => {
       if (grocery) {
-        console.log("grocery", grocery)
         res.status(201).json({
           success: true,
           message: `${grocery.name} has been added at &#8358;${grocery.price}`,
-          grocery
+          grocery,
+          env: process.env.MONGODB_URI
         })
       }
     })

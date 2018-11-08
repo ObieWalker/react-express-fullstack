@@ -45,7 +45,7 @@ export const loadGroceries = () => (dispatch) => {
       url: '/api/v1/items'
     })
     .then(response => {
-      dispatch(getGroceriesSuccess(response.data))
+      dispatch(getGroceriesSuccess(response.data.data))
     })
     .catch((error) => { console.log(error) });
 }
