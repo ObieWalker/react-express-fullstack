@@ -51,7 +51,7 @@ const GroceryModal = ({errors, addGrocery, editGrocery, updateDetails, show, onH
             />
             </Modal.Body>
             <Modal.Footer>
-            {grocery.id ? 
+            {grocery._id ? 
               <button
               type="submit"
               id="add-grocery"

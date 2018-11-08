@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { addGrocery, deleteGrocery, buyGrocery, editGrocery } from '../actions/groceryAction'
+import Loading from 'react-loading-animation';
+import toastr from 'toastr';
+import { loadGroceries, addGrocery, deleteGrocery, buyGrocery, editGrocery, clearCart } from '../actions/groceryAction'
 import GroceryModal from './GroceryModal';
 import TotalPrice from './TotalPrice';
 
 import GroceryTable from './GroceryTable'
 
-export class GroceryList extends Component {
+export class GroceryPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +18,9 @@ export class GroceryList extends Component {
       groceryName: '',
       groceryPrice: '',
       errors: {},
-      grocery: {}
+      grocery: {},
+      cartEmpty: true,
+      loading: false
     };
   
   this.handleHide = this.handleHide.bind(this);
@@ -26,7 +30,32 @@ export class GroceryList extends Component {
   this.onDelete = this.onDelete.bind(this)
   this.onBuy = this.onBuy.bind(this)
   this.handleShowEdit = this.handleShowEdit.bind(this)
+  this.clearCart = this.clearCart.bind(this)
+  }
 
+  componentWillMount() {
+    this.setState({ loading: true })
+    this.props.loadGroceries().then(() => {
+      this.setState({ loading: false })
+      this.props.groceries.map(grocery => {
+          if (grocery.purchased === true) {
+            this.setState({
+              cartEmpty: false
+            })
+          }
+        })
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let emptyCart = true;
+    this.props.groceries.map(grocery => {
+      if (grocery.purchased === true) {
+        emptyCart = false
+        return emptyCart
+      }
+    })
+    this.setState({ cartEmpty: emptyCart })
   }
 
 handleHide() {
@@ -106,8 +135,19 @@ onDelete(id) {
   this.props.deleteGrocery(id)
 }
 
-onBuy(id) {
-  this.props.buyGrocery(id)
+onBuy(id, purchased) {
+  this.props.buyGrocery(id, purchased)
+  this.setState({cartEmpty: false})
+}
+
+clearCart() {
+  const { cartIsEmpty } = this.state
+  if (!cartIsEmpty){
+      this.props.clearCart()
+      this.setState({ cartEmpty: true})
+  } else {
+    toastr.error("Cart is already empty.")
+  }
 }
 
   render() {
@@ -115,18 +155,17 @@ onBuy(id) {
     return (
       <div>
         <h1 className="text-center">Grocery Listing  </h1>
-        <div className="p-3 mb-2 bg-info text-white" style={{ float: 'right', padding: '2%' }}>
-          <h4>
-            <TotalPrice groceries={this.props.groceries}/>
-          </h4>
-        </div>
-        <GroceryTable 
-          groceries={this.props.groceries}
-          addGrocery={this.addGrocery}
-          deleteGrocery={this.onDelete}
-          buyGrocery={this.onBuy}
-          onShow={this.handleShowEdit}
-        />
+
+        { this.state.loading ? 
+          <Loading /> : 
+          <GroceryTable 
+            groceries={this.props.groceries}
+            addGrocery={this.addGrocery}
+            deleteGrocery={this.onDelete}
+            buyGrocery={this.onBuy}
+            onShow={this.handleShowEdit}
+          />
+        }
 
         <GroceryModal 
           errors={errors}
@@ -144,6 +183,19 @@ onBuy(id) {
             onClick={() => this.setState({ show: true })} >
             Add Grocery
           </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <input
+            type="submit"
+            value='Clear Cart'
+            disabled={this.state.cartEmpty}
+            className='btn btn-lg btn-danger'
+            onClick={this.clearCart}
+            />
+        </div>
+        <div className="p-3 mb-2 bg-info text-white" style={{ float: 'right', padding: '2%' }}>
+          <h4>
+            <TotalPrice groceries={this.props.groceries}/>
+          </h4>
         </div>
       </div>
     );
@@ -158,13 +210,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
+      loadGroceries,
       addGrocery,
       deleteGrocery,
       buyGrocery,
-      editGrocery
+      editGrocery,
+      clearCart
     },
     dispatch
   );
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(GroceryList);
+export default connect(mapStateToProps, mapDispatchToProps)(GroceryPage);
