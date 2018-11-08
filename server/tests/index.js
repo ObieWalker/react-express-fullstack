@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 dotenv.config();
 
-mongoose.connect('mongodb://localhost/shoppingListTest', () => {
+mongoose.connect(process.env.MONGODB_URI_TEST, () => {
   console.log("Test Mongo is connected.")
 });
 const { expect } = chai;

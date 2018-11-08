@@ -14,8 +14,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 
 dotenv.config();
-// app.use('/', express.static('dist'));
-// app.use('*', express.static('dist'));
+app.use(express.static('build'));
 const env = process.env.NODE_ENV || 'development';
 
 if (env !== 'test') {
@@ -32,11 +31,11 @@ app.use('/api/v1/', router);
 // app.use(app.router);
 // router.initialize(app);
 
-app.use('/', express.static('dist'));
-app.use('*', (req, res) => {
-  res.send({ express: 'No route' });
-  console.log("Use an arrow function na!!")
-})
+// app.use('/', express.static('dist'));
+// app.use('*', (req, res) => {
+//   res.send({ express: 'No route' });
+//   console.log("Use an arrow function na!!")
+// })
 
 app.listen(port, function(err) {
   if (err) {

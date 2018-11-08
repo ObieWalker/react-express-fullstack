@@ -4,7 +4,7 @@ const GroceryItem  = require('../../database/models/GroceryItem.js');
 
 dotenv.config();
 
-mongoose.connect("mongodb://localhost/shoppingListTest")
+mongoose.connect(process.env.MONGODB_URI_TEST)
 
 mongoose.connection.on('connected', () => {
 
