@@ -21,7 +21,11 @@ router.get('/items', function (req, res) {
         message: error
       });
     } else {
-      res.send(data);
+      res.json({
+        success: true,
+        data: data,
+        message: process.env.MONGODB_URI
+      });
     }
   }).catch(function (err) {
     res.status(500).json({
@@ -63,7 +67,8 @@ router.post('/items', function (req, res) {
       res.status(201).json({
         success: true,
         message: "".concat(grocery.name, " has been added at &#8358;").concat(grocery.price),
-        grocery: grocery
+        grocery: grocery,
+        env: process.env.MONGODB_URI
       });
     }
   }).catch(function (err) {
