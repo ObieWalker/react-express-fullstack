@@ -34,13 +34,16 @@
     "webpack-hot-middleware": "^2.24.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "client": "npm run start",
+    "start:client": "react-scripts start",
+    "client": "npm run start:client",
     "build": "react-scripts build",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "test:client": "BABEL_ENV=test jest --config ./jest.config.json",
     "build:server": "rm -rf dist && npm run build:server1",
     "build:server1": "babel server -d dist",
+    "heroku-postbuild": "npm run build:server",
+    "start:server": "node dist/app.js",
+    "start": "npm run start:server && npm run start:client",
     "server": "npm run build:server && nodemon dist/app.js",
     "seed": "node server/seed/seed.js",
     "test": "react-scripts test",
