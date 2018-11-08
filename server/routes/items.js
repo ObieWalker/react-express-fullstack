@@ -58,7 +58,6 @@ const router = express.Router();
     })
     .then(grocery => {
       if (grocery) {
-        console.log("grocery", grocery)
         res.status(201).json({
           success: true,
           message: `${grocery.name} has been added at &#8358;${grocery.price}`,
