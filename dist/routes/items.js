@@ -60,7 +60,6 @@ router.post('/items', function (req, res) {
     price: req.body.groceryPrice
   }).then(function (grocery) {
     if (grocery) {
-      console.log("grocery", grocery);
       res.status(201).json({
         success: true,
         message: "".concat(grocery.name, " has been added at &#8358;").concat(grocery.price),
