@@ -39,6 +39,12 @@ export const editGrocerySuccess = (groceryId, grocery) => {
   }
 }
 
+export const clearCartSuccess = () => {
+  return {
+    type: types.CLEAR_CART_SUCCESS
+  }
+}
+
 export const loadGroceries = () => (dispatch) => {
     return axios({
       method: 'GET',
@@ -79,10 +85,12 @@ export const deleteGrocery = (groceryId) => dispatch =>  {
   });
 }
 
-export const buyGrocery = (groceryId) => dispatch =>  {
+export const buyGrocery = (groceryId, purchased) => dispatch =>  {
+  const value = { purchased: purchased}
   return axios({
     method: 'PUT',
-    url: `/api/v1/items/${groceryId}`
+    url: `/api/v1/items/${groceryId}`,
+    data: value
   })
   .then(response => {
     toastr.success(response.data.message)
@@ -103,6 +111,20 @@ export const editGrocery = (groceryId,  grocery) => dispatch =>  {
   .then(response => {
     toastr.success(response.data.message)
     dispatch(editGrocerySuccess(groceryId, response.data.item))
+  })
+  .catch((error) => { 
+    toastr.error(error)
+  });
+}
+
+export const clearCart = () => dispatch =>  {
+  return axios({
+    method: 'PUT',
+    url: '/api/v1/items/'
+  })
+  .then(response => {
+    toastr.success(response.data.message)
+    dispatch(clearCartSuccess())
   })
   .catch((error) => { 
     toastr.error(error)

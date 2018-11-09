@@ -14,8 +14,7 @@ const router = express.Router();
       } else {
         res.json({
           success: true,
-          data,
-          message: process.env.MONGODB_URI
+          data
         })
       }
     })
@@ -25,8 +24,7 @@ const router = express.Router();
         message: "error with input type"
       });
     })
-
-    }  )
+  })
 
   router.get('/items/:id',(req, res) => {
     const id = req.params.id
@@ -65,8 +63,7 @@ const router = express.Router();
         res.status(201).json({
           success: true,
           message: `${grocery.name} has been added at &#8358;${grocery.price}`,
-          grocery,
-          env: process.env.MONGODB_URI
+          grocery
         })
       }
     })
@@ -135,16 +132,24 @@ const router = express.Router();
   router.put('/items/:id',(req, res) => {
     const itemId = req.params.id
     const itemPurchased = {
-      purchased: true
+      purchased: !req.body.purchased
     }
     GroceryItem.findByIdAndUpdate(itemId, itemPurchased, {new:true})
     .then(item => {
       if (item){
-        res.json({
-          success: true,
-          message: "The item has been purchased",
-          item
-        })
+        if (item.purchased){
+          res.json({
+            success: true,
+            message: "The item has been purchased",
+            item
+          })
+        } else {
+          res.json({
+            success: true,
+            message: "The item has been removed from the cart",
+            item
+          })
+        }
       } else {
         res.status(404).json({
           success: false,
@@ -156,6 +161,23 @@ const router = express.Router();
       res.status(404).json({
         success: false,
         message: "No such item"
+      });
+    })
+  })
+
+  router.put('/items/',(req, res) => {
+    GroceryItem.updateMany({}, 
+      { $set: { "purchased" : false } })
+    .then(() =>
+        res.json({
+          success: true,
+          message: "Shopping cart has been cleared"
+        })
+      )
+    .catch(err => {
+      res.status(500).json({
+        success: false,
+        message: err
       });
     })
   })

@@ -3,7 +3,8 @@ import React from 'react';
 const GroceryTable = ({groceries, deleteGrocery, buyGrocery, onShow}) => {
     return (
       <div>
-        <table className="table text-center table-hover mx-auto bg-white table-responsive-sm table-striped" style={{ marginLeft: '25%', marginRight: '10%', width: '50%' }}>
+        {groceries &&  groceries.length > 0 ? 
+          <table className="table text-center table-hover mx-auto bg-white table-responsive-sm table-striped" style={{ marginLeft: '25%', marginRight: '10%', width: '50%' }}>
           <thead className="text-center text-white bg-info border border-white">
             <tr className="p-3">
               <th scope="col" className="border border-white">
@@ -32,11 +33,10 @@ const GroceryTable = ({groceries, deleteGrocery, buyGrocery, onShow}) => {
               <td>
                 <input
                 type="submit"
-                disabled={grocery.purchased}
-                value={grocery.purchased ? 'Bought' : 'Buy'}
-                className="btn btn-primary"
-                onClick={() => buyGrocery(grocery._id)}
-          />
+                value={grocery.purchased ? 'Remove' : 'Purchase'}
+                className={grocery.purchased ? 'btn btn-warning' : 'btn btn-primary'}
+                onClick={() => buyGrocery(grocery._id, grocery.purchased)}
+                />
               </td>
               <td>
                 <button type="button" className="btn-warning btn-sm"
@@ -55,7 +55,12 @@ const GroceryTable = ({groceries, deleteGrocery, buyGrocery, onShow}) => {
           )}
           </tbody>
         </table>
-
+        : 
+        <div>
+        <h3 className="text-center ">No groceries Available at this time. Try reloading or add some.</h3>
+        <br />
+        </div>
+        }
       </div>
     );
   }
