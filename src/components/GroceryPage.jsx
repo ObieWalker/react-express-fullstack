@@ -59,10 +59,12 @@ export class GroceryPage extends Component {
   }
 
 handleHide() {
+  console.log("hide")
   this.setState({
     groceryName: '',
     groceryPrice: '', 
-    show: false });
+    show: false,
+    grocery: {} });
 }
 
 handleShowEdit(grocery) {
